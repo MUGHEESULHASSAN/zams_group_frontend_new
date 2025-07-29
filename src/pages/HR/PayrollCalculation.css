@@ -1,0 +1,48 @@
+.payroll-calculation-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.payroll-calculation-page .page-controls {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.payroll-calculation-page .filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.payroll-calculation-page .filter-group label {
+  font-weight: 500;
+  color: #333;
+}
+
+.payroll-calculation-page .filter-group select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+}
+
+/* Specific styles for payroll status badges if needed */
+.status-badge.no-definition {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+.status-badge.calculated {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+@media (max-width: 768px) {
+  .payroll-calculation-page .page-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
