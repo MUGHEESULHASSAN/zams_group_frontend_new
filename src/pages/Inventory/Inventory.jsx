@@ -20,36 +20,76 @@ const Inventory = () => {
     const mockProducts = [
       {
         id: "PROD-001",
+        itemCode: "ITEM-123456",
         name: "Laptop Computer",
         sku: "LAP-001",
+        description: "High-performance laptop with 16GB RAM and 512GB SSD.",
         category: "Electronics",
+        unitType: "Piece",
+        mrp: 1200.0,
+        tradePrice: 999.99,
+        discount: 10,
+        taxCode: "GST18",
+        brandName: "TechBrand",
+        color: "Silver",
+        itemBarcode: "ITEM-123456",
         stock: 25,
         price: 999.99,
         status: "In Stock",
       },
       {
         id: "PROD-002",
+        itemCode: "ITEM-789012",
         name: "Office Chair",
         sku: "CHR-001",
+        description: "Ergonomic office chair with lumbar support.",
         category: "Furniture",
+        unitType: "Piece",
+        mrp: 350.0,
+        tradePrice: 299.99,
+        discount: 5,
+        taxCode: "VAT20",
+        brandName: "ComfortSeating",
+        color: "Black",
+        itemBarcode: "ITEM-789012",
         stock: 5,
         price: 299.99,
         status: "Low Stock",
       },
       {
         id: "PROD-003",
+        itemCode: "ITEM-345678",
         name: "Wireless Mouse",
         sku: "MOU-001",
+        description: "Compact wireless mouse with adjustable DPI.",
         category: "Electronics",
+        unitType: "Piece",
+        mrp: 55.0,
+        tradePrice: 49.99,
+        discount: 0,
+        taxCode: "GST18",
+        brandName: "ClickTech",
+        color: "Black",
+        itemBarcode: "ITEM-345678",
         stock: 0,
         price: 49.99,
         status: "Out of Stock",
       },
       {
         id: "PROD-004",
+        itemCode: "ITEM-901234",
         name: "Desk Lamp",
         sku: "LAM-001",
+        description: "LED desk lamp with multiple brightness settings.",
         category: "Furniture",
+        unitType: "Piece",
+        mrp: 85.0,
+        tradePrice: 79.99,
+        discount: 0,
+        taxCode: "VAT20",
+        brandName: "BrightHome",
+        color: "White",
+        itemBarcode: "ITEM-901234",
         stock: 15,
         price: 79.99,
         status: "In Stock",
@@ -64,7 +104,8 @@ const Inventory = () => {
       (product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchTerm.toLowerCase()),
+        product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.itemCode.toLowerCase().includes(searchTerm.toLowerCase()), // Search by new itemCode
     )
 
     if (stockFilter === "low") {
@@ -77,9 +118,11 @@ const Inventory = () => {
   }, [searchTerm, stockFilter, products])
 
   const columns = [
+    { key: "itemCode", header: "Item Code" }, // New column
     { key: "sku", header: "SKU" },
     { key: "name", header: "Product Name" },
     { key: "category", header: "Category" },
+    { key: "unitType", header: "Unit" }, // New column
     {
       key: "stock",
       header: "Stock",
@@ -112,7 +155,7 @@ const Inventory = () => {
   }
 
   const handleDeleteProduct = (product) => {
-    if (window.confirm(`Are you sure you want to delete product ${product.name}?`)) {
+    if (window.confirm(`Are you sure you want to delete product ${product.name} (${product.itemCode})?`)) {
       setProducts(products.filter((p) => p.id !== product.id))
     }
   }
@@ -123,8 +166,8 @@ const Inventory = () => {
         products.map((product) => (product.id === editingProduct.id ? { ...product, ...productData } : product)),
       )
     } else {
+      // For new products, use the generated ID from ProductForm
       const newProduct = {
-        id: `PROD-${String(products.length + 1).padStart(3, "0")}`,
         ...productData,
       }
       setProducts([...products, newProduct])
@@ -142,7 +185,11 @@ const Inventory = () => {
       </div>
 
       <div className="page-controls">
-        <SearchBar placeholder="Search products..." value={searchTerm} onChange={setSearchTerm} />
+        <SearchBar
+          placeholder="Search products by name, SKU, category, or item code..."
+          value={searchTerm}
+          onChange={setSearchTerm}
+        />
 
         <div className="filter-controls">
           <select value={stockFilter} onChange={(e) => setStockFilter(e.target.value)} className="filter-select">
@@ -159,6 +206,7 @@ const Inventory = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={editingProduct ? "Edit Product" : "Add Product"}
+        size="large"
       >
         <ProductForm product={editingProduct} onSave={handleSaveProduct} onCancel={() => setIsModalOpen(false)} />
       </Modal>
