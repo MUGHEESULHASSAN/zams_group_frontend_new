@@ -3,6 +3,13 @@
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import "./Sidebar.css"
+import "../../pages/Inventory/Settings/BrandManagement"
+import "../../pages/Inventory/Settings/CategoryManagement"
+import "../../pages/Inventory/Settings/ColorManagement"
+import "../../pages/Inventory/Settings/TaxCodeManagement"
+import "../../pages/Inventory/Settings/UnitTypeManagement"
+
+
 
 const Sidebar = ({ isOpen }) => {
   const location = useLocation()
@@ -28,7 +35,18 @@ const Sidebar = ({ isOpen }) => {
         { path: "/quotes", label: "Quotes" },
       ],
     },
-    { path: "/inventory", label: "Inventory", icon: "📦" },
+    { path: "/", label: "Inventory", icon: "📦" ,key: "inventory",
+        submenu: [
+        { path: "/inventory", label: "Inventory" },
+        { path: "/BrandManagement", label: "Brand Management" },
+        { path: "/CategoryManagement", label: "Category Management" },
+        { path: "/ColorManagement", label: "Color Management" },
+        { path: "/TaxCodeManagement", label: "Tax Code Management" },
+        { path: "/UnitTypeManagement", label: "Unit Type Management" },
+      ],
+
+    },
+
     {
       label: "Purchasing",
       icon: "🛒",
