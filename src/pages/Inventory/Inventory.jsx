@@ -36,6 +36,8 @@ const Inventory = () => {
         stock: 25,
         price: 999.99,
         status: "In Stock",
+        imageUrl: "https://res.cloudinary.com/demo/image/upload/v1700000000/samples/ecommerce/analog-classic.jpg", // Example Cloudinary URL
+        finalPrice: 899.99,
       },
       {
         id: "PROD-002",
@@ -55,6 +57,8 @@ const Inventory = () => {
         stock: 5,
         price: 299.99,
         status: "Low Stock",
+        imageUrl: "https://res.cloudinary.com/demo/image/upload/v1700000000/samples/ecommerce/accessories-bag.jpg", // Example Cloudinary URL
+        finalPrice: 284.99,
       },
       {
         id: "PROD-003",
@@ -74,6 +78,8 @@ const Inventory = () => {
         stock: 0,
         price: 49.99,
         status: "Out of Stock",
+        imageUrl: "https://res.cloudinary.com/demo/image/upload/v1700000000/samples/ecommerce/shoes.jpg", // Example Cloudinary URL
+        finalPrice: 49.99,
       },
       {
         id: "PROD-004",
@@ -93,6 +99,8 @@ const Inventory = () => {
         stock: 15,
         price: 79.99,
         status: "In Stock",
+        imageUrl: "https://res.cloudinary.com/demo/image/upload/v1700000000/samples/ecommerce/car-interior-design.jpg", // Example Cloudinary URL
+        finalPrice: 79.99,
       },
     ]
     setProducts(mockProducts)
@@ -118,6 +126,20 @@ const Inventory = () => {
   }, [searchTerm, stockFilter, products])
 
   const columns = [
+    {
+      key: "imageUrl",
+      header: "Image",
+      render: (value, row) => (
+        <div className="product-image-thumbnail">
+          {value ? (
+            <img src={value || "/placeholder.svg"} alt={row.name} className="thumbnail-img" />
+          ) : (
+            <div className="thumbnail-placeholder">📦</div>
+          )}
+        </div>
+      ),
+      className: "image-column", // New class for image column
+    },
     { key: "itemCode", header: "Item Code" }, // New column
     { key: "sku", header: "SKU" },
     { key: "name", header: "Product Name" },
@@ -135,6 +157,11 @@ const Inventory = () => {
     {
       key: "price",
       header: "Price",
+      render: (value) => `$${value.toFixed(2)}`,
+    },
+    {
+      key: "finalPrice",
+      header: "Final Price",
       render: (value) => `$${value.toFixed(2)}`,
     },
     {

@@ -10,32 +10,33 @@ const LoginPage = () => {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
-  const { login } = useAuth() // <-- Use AuthContext login
+  const { login } = useAuth()
   const navigate = useNavigate()
 
-  // Allow any username/password
-  const fakeLogin = async (user, pass) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve()
-      }, 500)
-    })
-  }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError("")
-    setLoading(true)
-    try {
-      await fakeLogin(username, password)
-      login({ username }) // <-- Set user as authenticated
-      navigate("/") // Redirect to dashboard
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
+  try {
+    // ✅ Allow hardcoded login for testing
+    if (username === "abc" && password === "abc") {
+      localStorage.setItem("isAuthenticated", "true"); // Fake auth state
+      navigate("/"); // Redirect to home
+      return;
     }
+
+    // 🔐 Actual login logic
+    await login(username, password);
+    localStorage.setItem("isAuthenticated", "true");
+    navigate("/");
+  } catch (err) {
+    setError("Invalid username or password.");
+  } finally {
+    setLoading(false);
   }
+};
+
 
   return (
     <div className="auth-page">

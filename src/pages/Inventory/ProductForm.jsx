@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import JsBarcode from "jsbarcode"
 import "./ProductForm.css" // New CSS file for form specific styles
 
@@ -27,9 +27,47 @@ const ProductForm = ({ product, onSave, onCancel }) => {
     stock: 0,
     price: 0,
     status: "In Stock",
+    // New field for image
+    imageUrl: "",
   })
 
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [brandSuggestions, setBrandSuggestions] = useState([])
   const barcodeCanvasRef = useRef(null)
+  const fileInputRef = useRef(null) // Ref for the hidden file input
+
+  // Mock data for brand suggestions (in a real app, this would come from an API)
+  const allBrands = useMemo(
+    () => [
+      "TechBrand",
+      "ComfortSeating",
+      "ClickTech",
+      "BrightHome",
+      "Samsung",
+      "Apple",
+      "Sony",
+      "HP",
+      "Dell",
+      "Logitech",
+      "Steelcase",
+      "Herman Miller",
+      "IKEA",
+      "Nike",
+      "Adidas",
+      "Puma",
+      "Zara",
+      "H&M",
+      "Penguin Books",
+      "Random House",
+      "Coca-Cola",
+      "Pepsi",
+      "Nestle",
+      "Bosch",
+      "Makita",
+      "Stanley",
+    ],
+    [],
+  )
 
   useEffect(() => {
     if (product) {
@@ -41,6 +79,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
         ...prev,
         itemCode: newItemCode,
         id: `PROD-${Date.now().toString().slice(-6)}`, // Generate a unique ID for new products
+        imageUrl: "", // Clear image for new product
       }))
     }
   }, [product])
@@ -71,6 +110,14 @@ const ProductForm = ({ product, onSave, onCancel }) => {
     }
   }, [formData.itemCode])
 
+  // Calculate Final Price
+  const finalPrice = useMemo(() => {
+    const tp = Number.parseFloat(formData.tradePrice) || 0
+    const disc = Number.parseFloat(formData.discount) || 0
+    if (tp <= 0) return 0
+    return (tp * (1 - disc / 100)).toFixed(2)
+  }, [formData.tradePrice, formData.discount])
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -96,7 +143,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
       status = "Low Stock"
     }
 
-    onSave({ ...formData, status })
+    onSave({ ...formData, status, finalPrice: Number.parseFloat(finalPrice) }) // Include finalPrice in saved data
   }
 
   const handleChange = (e) => {
@@ -108,6 +155,62 @@ const ProductForm = ({ product, onSave, onCancel }) => {
           ? Number(value)
           : value,
     }))
+
+    // Handle brand name suggestions
+    if (name === "brandName") {
+      if (value.length > 0) {
+        const filteredSuggestions = allBrands.filter((brand) => brand.toLowerCase().includes(value.toLowerCase()))
+        setBrandSuggestions(filteredSuggestions)
+      } else {
+        setBrandSuggestions([])
+      }
+    }
+  }
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    setUploadingImage(true)
+    const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME // Use VITE_ prefix for Vite
+    const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET // Use VITE_ prefix for Vite
+
+    if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+      console.error("Cloudinary environment variables are not set.")
+      alert("Cloudinary configuration missing. Please check your .env file.")
+      setUploadingImage(false)
+      return
+    }
+
+    const formDataCloudinary = new FormData()
+    formDataCloudinary.append("file", file)
+    formDataCloudinary.append("upload_preset", CLOUDINARY_UPLOAD_PRESET)
+
+    try {
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: "POST",
+        body: formDataCloudinary,
+      })
+      const data = await response.json()
+      if (data.secure_url) {
+        setFormData((prev) => ({ ...prev, imageUrl: data.secure_url }))
+      } else {
+        console.error("Cloudinary upload failed:", data)
+        alert("Image upload failed. Please try again.")
+      }
+    } catch (error) {
+      console.error("Error uploading image to Cloudinary:", error)
+      alert("An error occurred during image upload.")
+    } finally {
+      setUploadingImage(false)
+    }
+  }
+
+  const handleRemoveImage = () => {
+    setFormData((prev) => ({ ...prev, imageUrl: "" }))
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "" // Clear the file input
+    }
   }
 
   const handleDownloadBarcode = () => {
@@ -171,6 +274,50 @@ const ProductForm = ({ product, onSave, onCancel }) => {
       {/* General Information */}
       <div className="form-section">
         <h3 className="section-title">General Information</h3>
+
+        <div className="form-group image-upload-group">
+          <label htmlFor="productImage">Product Image</label>
+          <div className="image-preview-area">
+            {uploadingImage ? (
+              <div className="image-placeholder">Uploading...</div>
+            ) : formData.imageUrl ? (
+              <img
+                src={formData.imageUrl || "/placeholder.svg"}
+                alt="Product Preview"
+                className="product-image-preview"
+              />
+            ) : (
+              <div className="image-placeholder">No Image</div>
+            )}
+            <input
+              type="file"
+              id="productImage"
+              name="productImage"
+              accept="image/*"
+              onChange={handleImageChange}
+              ref={fileInputRef}
+              className="file-input-hidden"
+              disabled={uploadingImage}
+            />
+            <div className="image-upload-buttons">
+              <label htmlFor="productImage" className="upload-button primary-btn" disabled={uploadingImage}>
+                {uploadingImage ? "Uploading..." : formData.imageUrl ? "Change Image" : "Upload Image"}
+              </label>
+              {formData.imageUrl && (
+                <button
+                  type="button"
+                  className="remove-image-button secondary-btn"
+                  onClick={handleRemoveImage}
+                  disabled={uploadingImage}
+                >
+                  Remove Image
+                </button>
+              )}
+            </div>
+          </div>
+          <small className="field-note">Upload a clear image of the product.</small>
+        </div>
+
         <div className="form-group">
           <label htmlFor="itemCode">Item Code</label>
           <input
@@ -309,9 +456,21 @@ const ProductForm = ({ product, onSave, onCancel }) => {
         </div>
 
         <div className="form-row">
-          <div className="form-group">
+          <div className="form-group brand-name-group">
             <label htmlFor="brandName">Brand Name</label>
-            <input type="text" id="brandName" name="brandName" value={formData.brandName} onChange={handleChange} />
+            <input
+              type="text"
+              id="brandName"
+              name="brandName"
+              value={formData.brandName}
+              onChange={handleChange}
+              list="brand-suggestions" // Link to datalist
+            />
+            <datalist id="brand-suggestions">
+              {brandSuggestions.map((brand) => (
+                <option key={brand} value={brand} />
+              ))}
+            </datalist>
           </div>
 
           <div className="form-group">
@@ -325,6 +484,12 @@ const ProductForm = ({ product, onSave, onCancel }) => {
               ))}
             </select>
           </div>
+        </div>
+
+        <div className="form-group final-price-display">
+          <label>Final Price</label>
+          <input type="text" value={`$${finalPrice}`} readOnly className="read-only-field" />
+          <small className="field-note">Calculated as Trade Price - Discount.</small>
         </div>
       </div>
 
@@ -358,10 +523,10 @@ const ProductForm = ({ product, onSave, onCancel }) => {
       </div>
 
       <div className="form-actions">
-        <button type="button" className="secondary-btn" onClick={onCancel}>
+        <button type="button" className="secondary-btn" onClick={onCancel} disabled={uploadingImage}>
           Cancel
         </button>
-        <button type="submit" className="primary-btn">
+        <button type="submit" className="primary-btn" disabled={uploadingImage}>
           {product ? "Update Product" : "Add Product"}
         </button>
       </div>

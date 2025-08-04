@@ -1,0 +1,205 @@
+.management-page {
+  padding: 20px;
+  background-color: #f4f7f6;
+  min-height: calc(100vh - 60px); /* Adjust based on your layout's top nav height */
+}
+
+.management-page h1 {
+  color: #2c3e50;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.add-form-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.add-form-section h2 {
+  color: #34495e;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.add-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.add-form .form-group {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.add-form input[type="text"],
+.add-form textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.add-form input:focus,
+.add-form textarea:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.add-form button {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+
+.add-form button:hover {
+  background-color: #218838;
+}
+
+.add-form .error-message {
+  color: #dc3545;
+  font-size: 0.85em;
+  margin-top: 5px;
+}
+
+.data-list-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.data-list-section h2 {
+  color: #34495e;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.data-table-settings {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.data-table-settings th,
+.data-table-settings td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.data-table-settings th {
+  background-color: #f8f8f8;
+  font-weight: bold;
+  color: #444;
+  text-transform: uppercase;
+  font-size: 0.9em;
+}
+
+.data-table-settings tbody tr:hover {
+  background-color: #fbfbfb;
+}
+
+.data-table-settings .action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.data-table-settings .action-buttons button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.2s ease;
+}
+
+.data-table-settings .edit-btn {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.data-table-settings .edit-btn:hover {
+  background-color: #e0a800;
+}
+
+.data-table-settings .delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.data-table-settings .delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* Inline Edit Styles */
+.data-table-settings .edit-input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: calc(100% - 16px); /* Account for padding */
+  box-sizing: border-box;
+}
+
+.data-table-settings .edit-input.error {
+  border-color: #dc3545;
+}
+
+.data-table-settings .edit-actions {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.data-table-settings .save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.data-table-settings .save-btn:hover {
+  background-color: #218838;
+}
+
+.data-table-settings .cancel-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.data-table-settings .cancel-btn:hover {
+  background-color: #5a6268;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .add-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .add-form .form-group {
+    min-width: unset;
+  }
+  .data-table-settings {
+    min-width: 600px; /* Allow horizontal scroll for table */
+  }
+}

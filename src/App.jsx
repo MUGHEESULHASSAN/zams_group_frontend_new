@@ -32,42 +32,46 @@ function App() {
   return (
     <Router>
       <AuthProvider>
+        {" "}
+        {/* Wrap the entire application with AuthProvider */}
         <Routes>
           {/* Public Routes */}
-          {/* <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} /> */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
           {/* Protected Routes */}
           <Route
             path="/*"
             element={
-              // Remove PrivateRoute to disable login protection
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/sales" element={<Sales />} />
-                  <Route path="/customers" element={<Customers />} />
-                  <Route path="/opportunities" element={<Opportunities />} />
-                  <Route path="/quotes" element={<Quotes />} />
-                  <Route path="/inventory" element={<Inventory />} />
-                  <Route path="/purchasing" element={<Purchasing />} />
-                  <Route path="/vendors" element={<Vendors />} />
-                  <Route path="/receipts" element={<Receipts />} />
-                  <Route path="/requisitions" element={<Requisitions />} />
-                  <Route path="/hr" element={<HumanResources />} />
-                  <Route path="/departments" element={<Departments />} />
-                  <Route path="/leave" element={<LeaveManagement />} />
-                  <Route path="/finance" element={<Finance />} />
-                  <Route path="/invoices" element={<Invoices />} />
-                  <Route path="/reports" element={<Reports />} />
-                  <Route path="/calendar" element={<Calendar />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/company" element={<Company />} />
-                  <Route path="/hr/attendance-reports" element={<AttendanceReports />} />
-                  <Route path="/hr/payroll-calculation" element={<PayrollCalculation />} />
-                </Routes>
-              </Layout>
+              <PrivateRoute>
+                <Layout>
+                  <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/sales" element={<Sales />} />
+                    <Route path="/customers" element={<Customers />} />
+                    <Route path="/opportunities" element={<Opportunities />} />
+                    <Route path="/quotes" element={<Quotes />} />
+                    <Route path="/inventory" element={<Inventory />} />
+                    <Route path="/purchasing" element={<Purchasing />} />
+                    <Route path="/vendors" element={<Vendors />} />
+                    <Route path="/receipts" element={<Receipts />} />
+                    <Route path="/requisitions" element={<Requisitions />} />
+                    <Route path="/hr" element={<HumanResources />} />
+                    <Route path="/departments" element={<Departments />} />
+                    <Route path="/leave" element={<LeaveManagement />} />
+                    <Route path="/finance" element={<Finance />} />
+                    <Route path="/invoices" element={<Invoices />} />
+                    <Route path="/reports" element={<Reports />} />
+                    <Route path="/calendar" element={<Calendar />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/company" element={<Company />} />
+                    <Route path="/hr/attendance-reports" element={<AttendanceReports />} />{" "}
+                    {/* New route for attendance reports */}
+                    <Route path="/hr/payroll-calculation" element={<PayrollCalculation />} />
+                  </Routes>
+                </Layout>
+              </PrivateRoute>
             }
           />
         </Routes>
