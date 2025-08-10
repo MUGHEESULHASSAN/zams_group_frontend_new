@@ -1,3 +1,4 @@
+/* Existing Styles */
 .sales-page {
   max-width: 1200px;
   margin: 0 auto;
@@ -21,3 +22,100 @@
   outline: none;
   border-color: #007bff;
 }
+
+/* Table Container: Make it scrollable horizontally */
+.table-container {
+  max-height: 500px; /* Adjust as needed */
+  overflow-x: auto;  /* Enable horizontal scrolling */
+  margin-top: 20px;
+  border: 1px solid #ddd; /* Optional: Add border for clarity */
+  border-radius: 8px;  /* Optional: Rounded corners for the table */
+}
+
+/* Table Styling: Set the width of the table and ensure it doesn't overflow */
+table {
+  width: 100%;
+  table-layout: fixed;  /* Ensure table columns don't overflow */
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;  /* Add a separator between rows */
+}
+
+/* Column Toggle: Add styling for the column filter (checkboxes) */
+.column-toggle {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+}
+
+.column-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.column-options div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.column-options input {
+  margin-right: 5px;
+}
+
+.column-options label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Filter Button */
+.filter-button-container {
+  position: relative;
+}
+
+.filter-btn {
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.filter-btn:hover {
+  background-color: #0056b3;
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  width: 200px;
+}
+
+.filter-dropdown div {
+  margin-bottom: 10px;
+}
+
+.filter-dropdown label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.filter-dropdown input {
+  margin-right: 8px;
+}
+

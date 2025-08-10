@@ -13,6 +13,15 @@ const Sales = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingOrder, setEditingOrder] = useState(null)
+  const [visibleColumns, setVisibleColumns] = useState([
+    "id",
+    "customer",
+    "transactionDate",
+    "items",
+    "total",
+    "status",
+  ])
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   useEffect(() => {
     // Simulate loading orders data
@@ -20,26 +29,54 @@ const Sales = () => {
       {
         id: "ORD-001",
         customer: "John Smith",
-        date: "2024-01-15",
-        total: 1250.0,
+        transactionDate: "2024-01-15",
+        memo: "",
+        warehouse: "Warehouse 1",
+        dueDate: "2024-02-15",
+        referenceNo: "REF-123",
+        customerRep: "Alice",
+        paymentTerms: "Net 30",
+        items: [
+          {
+            item: "Item A",
+            account: "Account 1",
+            unitType: "kg",
+            quantity: 2,
+            unitPrice: 250,
+            disc: 5,
+            tax: 10,
+            grossAmount: 500,
+          },
+        ],
+        total: 500,
+        totalGross: 500,
         status: "Pending",
-        items: 3,
       },
       {
         id: "ORD-002",
         customer: "Jane Doe",
-        date: "2024-01-14",
-        total: 850.0,
+        transactionDate: "2024-01-14",
+        memo: "Urgent order",
+        warehouse: "Warehouse 2",
+        dueDate: "2024-01-20",
+        referenceNo: "REF-124",
+        customerRep: "Bob",
+        paymentTerms: "COD",
+        items: [
+          {
+            item: "Item B",
+            account: "Account 2",
+            unitType: "pcs",
+            quantity: 1,
+            unitPrice: 850,
+            disc: 0,
+            tax: 100,
+            grossAmount: 950,
+          },
+        ],
+        total: 950,
+        totalGross: 950,
         status: "Completed",
-        items: 2,
-      },
-      {
-        id: "ORD-003",
-        customer: "Bob Johnson",
-        date: "2024-01-13",
-        total: 2100.0,
-        status: "Processing",
-        items: 5,
       },
     ]
     setOrders(mockOrders)
@@ -50,7 +87,7 @@ const Sales = () => {
     const filtered = orders.filter(
       (order) =>
         order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.id.toLowerCase().includes(searchTerm.toLowerCase()),
+        order.id.toLowerCase().includes(searchTerm.toLowerCase())
     )
     setFilteredOrders(filtered)
   }, [searchTerm, orders])
@@ -58,8 +95,8 @@ const Sales = () => {
   const columns = [
     { key: "id", header: "Order ID" },
     { key: "customer", header: "Customer" },
-    { key: "date", header: "Date" },
-    { key: "items", header: "Items" },
+    { key: "transactionDate", header: "Transaction Date" },
+    { key: "items", header: "Items", render: (items) => items.length }, // Display number of items
     {
       key: "total",
       header: "Total",
@@ -70,6 +107,13 @@ const Sales = () => {
       header: "Status",
       render: (value) => <span className={`status-badge ${value.toLowerCase()}`}>{value}</span>,
     },
+    { key: "memo", header: "Memo" },
+    { key: "warehouse", header: "Warehouse" },
+    { key: "dueDate", header: "Due Date" },
+    { key: "referenceNo", header: "Reference No" },
+    { key: "customerRep", header: "Customer Rep" },
+    { key: "paymentTerms", header: "Payment Terms" },
+    { key: "totalGross", header: "Total Gross" },
   ]
 
   const handleNewOrder = () => {
@@ -91,7 +135,11 @@ const Sales = () => {
   const handleSaveOrder = (orderData) => {
     if (editingOrder) {
       // Update existing order
-      setOrders(orders.map((order) => (order.id === editingOrder.id ? { ...order, ...orderData } : order)))
+      setOrders(
+        orders.map((order) =>
+          order.id === editingOrder.id ? { ...order, ...orderData } : order
+        )
+      )
     } else {
       // Add new order
       const newOrder = {
@@ -102,6 +150,18 @@ const Sales = () => {
       setOrders([...orders, newOrder])
     }
     setIsModalOpen(false)
+  }
+
+  const handleColumnToggle = (column) => {
+    setVisibleColumns((prev) =>
+      prev.includes(column)
+        ? prev.filter((item) => item !== column)
+        : [...prev, column]
+    )
+  }
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev)
   }
 
   return (
@@ -115,9 +175,37 @@ const Sales = () => {
 
       <div className="page-controls">
         <SearchBar placeholder="Search orders..." value={searchTerm} onChange={setSearchTerm} />
+        
+        {/* Filter Button and Dropdown */}
+        <div className="filter-button-container">
+          <button className="filter-btn" onClick={toggleDropdown}>
+            Filter Columns
+          </button>
+          {isDropdownOpen && (
+            <div className="filter-dropdown">
+              {columns.map((col) => (
+                <div key={col.key}>
+                  <input
+                    type="checkbox"
+                    checked={visibleColumns.includes(col.key)}
+                    onChange={() => handleColumnToggle(col.key)}
+                  />
+                  <label>{col.header}</label>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      <DataTable columns={columns} data={filteredOrders} onEdit={handleEditOrder} onDelete={handleDeleteOrder} />
+      <div className="table-container overflow-x-auto">
+        <DataTable
+          columns={columns.filter((col) => visibleColumns.includes(col.key))}
+          data={filteredOrders}
+          onEdit={handleEditOrder}
+          onDelete={handleDeleteOrder}
+        />
+      </div>
 
       <Modal
         isOpen={isModalOpen}
@@ -125,7 +213,11 @@ const Sales = () => {
         title={editingOrder ? "Edit Order" : "New Order"}
         size="large"
       >
-        <OrderForm order={editingOrder} onSave={handleSaveOrder} onCancel={() => setIsModalOpen(false)} />
+        <OrderForm
+          order={editingOrder}
+          onSave={handleSaveOrder}
+          onCancel={() => setIsModalOpen(false)}
+        />
       </Modal>
     </div>
   )

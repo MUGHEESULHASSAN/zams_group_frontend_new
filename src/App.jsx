@@ -31,6 +31,10 @@ import CategoryManagement from "./pages/Inventory/Settings/CategoryManagement"
 import ColorManagement from "./pages/Inventory/Settings/ColorManagement"
 import TaxCodeManagement from "./pages/Inventory/Settings/TaxCodeManagement"
 import UnitTypeManagement from "./pages/Inventory/Settings/UnitTypeManagement"
+import CustomerCategoryManagement from "./pages/Sales/CustomerCategoryManagement"
+import VendorForm from "./pages/Purchasing/VendorForm" // Import CustomerCategoryManagement
+
+
 
 import "./App.css"
 
@@ -80,6 +84,9 @@ function App() {
                     <Route path="/ColorManagement" element={<ColorManagement />} />
                     <Route path="/TaxCodeManagement" element={<TaxCodeManagement />} />
                     <Route path="/UnitTypeManagement" element={<UnitTypeManagement />} />
+                    <Route path="/CustomerCategoryManagement" element={<CustomerCategoryManagement />} />
+
+
                     {/* Add other routes as needed */}
                   </Routes>
                 </Layout>

@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 
 const CustomerForm = ({ customer, onSave, onCancel }) => {
@@ -9,6 +7,12 @@ const CustomerForm = ({ customer, onSave, onCancel }) => {
     phone: "",
     company: "",
     status: "Active",
+    category: "",
+    address: "",
+    cnic: "",
+    customerCode: "",
+    priceType: "",
+    ntnNumber: "",
   })
 
   useEffect(() => {
@@ -50,6 +54,36 @@ const CustomerForm = ({ customer, onSave, onCancel }) => {
       <div className="form-group">
         <label htmlFor="company">Company</label>
         <input type="text" id="company" name="company" value={formData.company} onChange={handleChange} required />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="category">Customer Category</label>
+        <input type="text" id="category" name="category" value={formData.category} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="address">Address</label>
+        <input type="text" id="address" name="address" value={formData.address} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="cnic">CNIC Number</label>
+        <input type="text" id="cnic" name="cnic" value={formData.cnic} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="customerCode">Customer Code</label>
+        <input type="text" id="customerCode" name="customerCode" value={formData.customerCode} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="priceType">Price Type</label>
+        <input type="text" id="priceType" name="priceType" value={formData.priceType} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="ntnNumber">NTN Number</label>
+        <input type="text" id="ntnNumber" name="ntnNumber" value={formData.ntnNumber} onChange={handleChange} />
       </div>
 
       <div className="form-group">

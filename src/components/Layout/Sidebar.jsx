@@ -8,6 +8,7 @@ import "../../pages/Inventory/Settings/CategoryManagement"
 import "../../pages/Inventory/Settings/ColorManagement"
 import "../../pages/Inventory/Settings/TaxCodeManagement"
 import "../../pages/Inventory/Settings/UnitTypeManagement"
+import "../../pages/Sales/CustomerCategoryManagement"
 
 
 
@@ -29,8 +30,9 @@ const Sidebar = ({ isOpen }) => {
       icon: "💰",
       key: "sales",
       submenu: [
-        { path: "/sales", label: "Orders" },
+        { path: "/sales", label: "Sale Orders" },
         { path: "/customers", label: "Customers" },
+        { path: "/CustomerCategoryManagement", label: "Customers Category" },
         { path: "/opportunities", label: "Opportunities" },
         { path: "/quotes", label: "Quotes" },
       ],
